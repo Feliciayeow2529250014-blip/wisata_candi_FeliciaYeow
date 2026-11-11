@@ -80,8 +80,11 @@ class _DetailScreenState extends State<DetailScreen> {
                       ),
                       IconButton(
                         onPressed: () {
-                          isFavorite = !isFavorite;
-                          print(isFavorite);
+                          // <-- 3. Implementasi aksi toggle favorite sendiri menggunakan setState
+                          setState(() {
+                            isFavorite = !isFavorite;
+                            widget.candi.isFavorite = isFavorite;
+                          });
                         },
                         icon: Icon(
                           isFavorite ? Icons.favorite : Icons.favorite_border,
@@ -169,7 +172,12 @@ class _DetailScreenState extends State<DetailScreen> {
                         return Padding(
                           padding: EdgeInsets.only(right: 8),
                           child: GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              // Aksi berpindah ke halaman gambar full screen saat di-tap
+                              // Navigator.push(
+                              //   ),
+                              // );
+                            },
                             child: Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12),
