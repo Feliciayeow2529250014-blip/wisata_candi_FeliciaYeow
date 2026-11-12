@@ -20,7 +20,15 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       //TODO 2. Padsang AppBar
-      appBar: AppBar(title: Text('Sign In')),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back), // The '<-' back arrow
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        title: Text('Sign In'),
+      ),
       //TODO 3. Pasang Body
       body: Center(
         child: SingleChildScrollView(
