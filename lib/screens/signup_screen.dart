@@ -17,6 +17,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool _isSignedIn = false;
   bool _obscurePassword = true;
 
+  //TODO 9. Buat fungsi signUp
+  void _signUp() {
+    String name = _nameController.text.trim();
+    String username = _usernameController.text.trim();
+    String password = _passwordController.text.trim();
+  }
+
+  //TODO 10. Buat fungsi dispose
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
