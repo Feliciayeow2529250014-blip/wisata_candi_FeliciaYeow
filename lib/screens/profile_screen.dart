@@ -14,12 +14,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String fullName = '';
   String userName = '';
   int favoriteCandiCount = 0;
+  late Color iconColor;
 
   //TODO: 5. Implementasi fungsi signedIn
   void signIn() {
-    setState(() {
-      isSignedIn = !isSignedIn;
-    });
+    // setState(() {
+    //   isSignedIn = !isSignedIn;
+    // });
+    Navigator.pushNamed(context, '/signin');
   }
 
   //TODO: 6. Implementasi fungsi signedOut

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wisata_candi/models/candi.dart';
 
 class DetailScreen extends StatefulWidget {
@@ -15,12 +16,47 @@ class _DetailScreenState extends State<DetailScreen> {
   bool isFavorite = false;
   // Status Desk
   bool isExpanded = false;
+  bool isSignedIn = false;
 
   @override
   void initState() {
     super.initState();
+    _checkSignInStatus();
+    _loadFavoriteStatus();
+  }
+
+  void _checkSignInStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool signedIn = prefs.getBool('isSignIn') ?? false;
+    setState(() {
+      isSignedIn = signedIn;
+    });
+  }
+
+  void _loadFavoriteStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool favorite = prefs.getBool('favorite_${widget.candi.name}') ?? false;
+    setState(() {
+      isFavorite = favorite;
+    });
+  }
+
+  Future<void> _toggleFavorite() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     // Menginisialisasi status favorit dari data model awal
-    isFavorite = widget.candi.isFavorite;
+    // isFavorite = widget.candi.isFavorite;
+    if (!isSignedIn) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacementNamed(context, '/signin');
+      });
+      return;
+    }
+    bool favoriteStatus = !isFavorite;
+    prefs.setBool('favorite_${widget.candi.name}', favoriteStatus);
+
+    setState(() {
+      isFavorite = favoriteStatus;
+    });
   }
 
   @override
@@ -83,13 +119,12 @@ class _DetailScreenState extends State<DetailScreen> {
                       IconButton(
                         onPressed: () {
                           // <-- 3. Implementasi aksi toggle favorite sendiri menggunakan setState
-                          setState(() {
-                            isFavorite = !isFavorite;
-                            widget.candi.isFavorite = isFavorite;
-                          });
+                          _toggleFavorite();
                         },
                         icon: Icon(
-                          isFavorite ? Icons.favorite : Icons.favorite_border,
+                          isSignedIn && isFavorite
+                              ? Icons.favorite
+                              : Icons.favorite_border,
                           color: isFavorite ? Colors.red : Colors.grey,
                         ),
                       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUpScreen extends StatefulWidget {
   SignUpScreen({super.key});
@@ -17,14 +18,50 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool _isSignedIn = false;
   bool _obscurePassword = true;
 
-  //TODO 9. Buat fungsi signUp
-  void _signUp() {
+  //TODO 9. Buat metode signUp
+  void _signUp() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     String name = _nameController.text.trim();
     String username = _usernameController.text.trim();
     String password = _passwordController.text.trim();
+
+    if (password.length < 8 ||
+        !password.contains(RegExp(r'[A-Z]')) ||
+        !password.contains(RegExp(r'[a-z]')) ||
+        !password.contains(RegExp(r'[0-9]')) ||
+        !password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+      setState(() {
+        _errorText = 'Minimal 8 karakter, kombinasi Huruf Kapital, huruf kecil, angka, simbol';
+      });
+      return;
+    }
+
+    setState(() {
+      _errorText = '';
+    });
+
+    //simpan data di sharedPreferences
+    prefs.setString('name', name);
+    prefs.setString('username', username);
+    prefs.setString('password', password);
+
+    //navigasi ke SignInScreen
+    Navigator.pushReplacementNamed(context, '/signin');
+    // print('*** Sign Up Berhasil!');
+    // print('Nama: $name');
+    // print('Nama Pengguna: $username');
+    // print('Kata Sandi: $password');
   }
 
-  //TODO 10. Buat fungsi dispose
+  //TODO 10. Buat metode dispose
+  @override
+  void dispose() {
+    //TODO Implemen dispose
+    _nameController.dispose();
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +129,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   //TODO 7. Pasang ElevatedButton untuk Sign Up
                   SizedBox(height: 20),
-                  ElevatedButton(onPressed: () {}, child: Text('Sign Up')),
+                  ElevatedButton(onPressed: _signUp, child: Text('Sign Up')),
                   //TODO 8. Pasang TextButton Sign In
                   SizedBox(height: 10),
                   //...
@@ -108,7 +145,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             decoration: TextDecoration.underline,
                             fontSize: 16,
                           ),
-                          recognizer: TapGestureRecognizer()..onTap = () {},
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              Navigator.pushNamed(context, '/signin');
+                            },
                         ),
                       ],
                     ),

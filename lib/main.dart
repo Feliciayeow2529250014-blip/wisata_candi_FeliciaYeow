@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:wisata_candi/data/candi_data.dart';
-import 'package:wisata_candi/models/candi.dart';
 import 'package:wisata_candi/screens/favorite_screen.dart';
 import 'package:wisata_candi/screens/home_screen.dart';
 import 'package:wisata_candi/screens/profile_screen.dart';
 import 'package:wisata_candi/screens/search_screen.dart';
 import 'package:wisata_candi/screens/signin_screen.dart';
-
-import 'screens/detail_screen.dart';
+import 'package:wisata_candi/screens/signup_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -35,7 +32,15 @@ class MyApp extends StatelessWidget {
             .copyWith(primary: Colors.deepPurple, surface: Colors.white),
         useMaterial3: true,
       ),
+
       home: MainScreen(),
+      initialRoute: '/',
+      routes: {
+        '/homescreen': (context) => HomeScreen(),
+        '/signin': (context) => SignInScreen(),
+        '/signup': (context) => SignUpScreen(),
+      },
+      // home: MainScreen(),
       // home: HomeScreen(),
       // home: SearchScreen(),
       // home: SignInScreen(),
@@ -45,7 +50,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MainScreen extends StatefulWidget {
-  MainScreen({super.key});
+  const MainScreen({super.key});
 
   @override
   State<MainScreen> createState() => _MainScreenState();
